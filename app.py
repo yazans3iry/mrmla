@@ -35,6 +35,12 @@ class Expense(db.Model):
     amount = db.Column(db.Float, nullable=False)
     expense_date = db.Column(db.Date, default=datetime.utcnow)
 
+class Customer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False, unique=True)
+    address = db.Column(db.String(200), nullable=True)
+
 # إنشاء قاعدة البيانات
 with app.app_context():
     db.create_all()
@@ -176,6 +182,25 @@ def expenses():
         return redirect(url_for('expenses'))
     all_expenses = Expense.query.all()
     return render_template('expenses.html', expenses=all_expenses)
+
+@app.route('/customers', methods=['GET', 'POST'])
+def customers():
+    if request.method == 'POST':
+        # استلام بيانات العميل من النموذج
+        name = request.form['name']
+        phone = request.form['phone']
+        address = request.form.get('address', '')
+
+        # إنشاء سجل جديد
+        new_customer = Customer(name=name, phone=phone, address=address)
+        db.session.add(new_customer)
+        db.session.commit()
+
+        return redirect(url_for('customers'))
+
+    # جلب جميع العملاء من قاعدة البيانات
+    all_customers = Customer.query.all()
+    return render_template('customers.html', customers=all_customers)
 
 # عرض التقارير
 @app.route('/reports')

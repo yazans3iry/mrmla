@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>التقارير</title>
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">  
+</head>
+<body>
+    <h1>التقارير</h1>
+    <h2>الإجماليات</h2>
+    <p>إجمالي المبيعات: {{ total_sales }}</p>
+    <p>إجمالي المشتريات: {{ total_purchases }}</p>
+    <p>إجمالي المصاريف: {{ total_expenses }}</p>
+    <p>إجمالي الخصومات المقدمة: {{ total_discounts }}</p>
+    <h2>صافي الربح/الخسارة</h2>
+    <p>{{ net_profit }}</p>
+    <h2>أرباح حسب الصنف</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>اسم الصنف</th>
+                <th>إجمالي الكمية</th>
+                <th>إجمالي المبيعات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in profit_by_item %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.total_quantity }}</td>
+                <td>{{ item.total_sales }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">الرجوع إلى الصفحة الرئيسية</a>
+</body>
+</html>

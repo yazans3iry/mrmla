@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل المبيعات</title>
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">  
+</head>
+<body>
+    <h1>تسجيل المبيعات</h1>
+    <form method="POST">
+        <label for="product_select">اختر الصنف:</label>
+        <select name="product_name" id="product_select" required>
+            <option value="" disabled selected>اختر الصنف</option>
+            {% for item in items %}
+            <option value="{{ item.name }}" 
+                    data-price="{{ item.price_per_unit }}" 
+                    data-unit="{{ item.unit }}">
+                {{ item.name }}
+            </option>
+            {% endfor %}
+        </select><br>
+        <p id="product_details">الوحدة: <span id="unit"></span>, السعر لكل وحدة: <span id="price"></span></p>
+        <label for="quantity">الكمية:</label>
+        <input type="number" step="0.01" name="quantity" id="quantity" placeholder="الكمية" required><br>
+        <label for="discount">الخصم:</label>
+        <input type="number" step="0.01" name="discount" id="discount" placeholder="الخصم (اختياري)" value="0"><br>
+        <label for="sale_date">تاريخ البيع:</label>
+        <input type="date" name="sale_date" id="sale_date" required><br>
+        <button type="submit">تسجيل</button>
+    </form>
+    <a href="/">الرجوع إلى الصفحة الرئيسية</a>
+
+    <h2>كل المبيعات</h2>
+<table>
+    <thead>
+        <tr>
+            <th>اسم الصنف</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+            <th>التاريخ</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in sales %}
+        <tr>
+            <td>{{ sale.product_name }}</td>
+            <td>{{ sale.quantity }} {{ items_dict[sale.product_name].unit }}</td>
+            <td>{{ sale.price }}</td>
+            <td>{{ sale.sale_date }}</td>
+            <td>
+                <form action="{{ url_for('delete_sale', sale_id=sale.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">حذف</button>
+                </form>
+                <a href="{{ url_for('edit_sale', sale_id=sale.id) }}"><button>تعديل</button></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <a href="/">الرجوع إلى الصفحة الرئيسية</a>
+
+    <script>
+        const productSelect = document.getElementById('product_select');
+        const unitSpan = document.getElementById('unit');
+        const priceSpan = document.getElementById('price');
+
+        productSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            unitSpan.textContent = selectedOption.getAttribute('data-unit') || 'غير متوفر';
+            priceSpan.textContent = selectedOption.getAttribute('data-price') || 'غير متوفر';
+        });
+    </script>
+</body>
+</html>

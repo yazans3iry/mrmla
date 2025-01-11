@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///construction_store.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://construction_store_user:Pr9b9eVWvDzSXvwSO17sf7zpOkBISCEQ@dpg-cu14cm56l47c73a00460-a.oregon-postgres.render.com/construction_store'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -19,7 +20,9 @@ class Sale(db.Model):
     product_name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    discount = db.Column(db.Float, default=0.0)  # إضافة حقل الخصم
     sale_date = db.Column(db.Date, default=datetime.utcnow)
+
 
 class Purchase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
